@@ -11,10 +11,12 @@ export default function App() {
   const [workouts, setWorkouts] = useState([]);
   const [analytics, setAnalytics] = useState(null);
   const [refreshTrigger, setRefreshTrigger] = useState(0);
-
-  // Add error states
   const [workoutError, setWorkoutError] = useState(null);
   const [analyticsError, setAnalyticsError] = useState(null);
+  const handleDeleteWorkout = (deletedId) => {
+    setWorkouts((prev) => prev.filter((workout) => workout.id !== deletedId));
+    setRefreshTrigger((prev) => prev + 1);
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -33,17 +35,16 @@ export default function App() {
     };
 
     fetchData();
-  }, [refreshTrigger]); // Trigger on refresh
+  }, [refreshTrigger]);
 
   const handleWorkoutAdded = () => {
-    setRefreshTrigger((prev) => prev + 1); // Force refresh all data
+    setRefreshTrigger((prev) => prev + 1);
   };
 
   return (
     <div className="min-h-screen bg-gray-100 p-4 md:p-8">
       <h1 className="text-3xl font-bold mb-8 text-center">Fitness Tracker</h1>
 
-      {/* Error Display */}
       {workoutError && <div className="text-red-500 mb-4">{workoutError}</div>}
       {analyticsError && (
         <div className="text-red-500 mb-4">{analyticsError}</div>
@@ -56,7 +57,7 @@ export default function App() {
 
         <div className="lg:col-span-2 space-y-6">
           <Analytics data={analytics} />
-          <WorkoutList workouts={workouts} />
+          <WorkoutList workouts={workouts} onDelete={handleDeleteWorkout} />
         </div>
       </div>
     </div>

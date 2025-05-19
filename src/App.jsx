@@ -33,14 +33,21 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 p-4 md:p-8">
-      <h1 className="text-3xl font-bold mb-8">Fitness Tracker</h1>
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
-        <div className="lg:col-span-1">
-          <FitnessForm onAdd={addWorkout} />
-        </div>
-        <div className="lg:col-span-2">
-          <Analytics data={analytics} />
+    <div>
+      <div className="min-h-screen bg-gray-100 p-4 md:p-8">
+        <h1 className="text-3xl font-bold mb-8">Fitness Tracker</h1>
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+          <main>
+            <div className="lg:col-span-1">
+              <FitnessForm onAdd={addWorkout} />
+            </div>
+            <div className="lg:col-span-2">
+              <Analytics data={analytics} />
+            </div>
+            <div className="min-h-screen bg-gray-50">
+              <WorkoutList />
+            </div>
+          </main>
         </div>
       </div>
     </div>

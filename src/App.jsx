@@ -4,6 +4,7 @@ import FitnessForm from "./components/FitnessForm";
 import AnalyticsDashboard from "./components/Analytics";
 import "./index.css";
 import Analytics from "./components/Analytics";
+import WorkoutList from "./components/WorkoutList";
 const API_URL = "http://localhost:8000";
 
 export default function App() {

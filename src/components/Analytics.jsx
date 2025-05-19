@@ -12,7 +12,7 @@ export default function Analytics({ data }) {
         backgroundColor: "#3b82f6",
       },
       {
-        label: "Volume (kg)",
+        label: "Volume (Lb)",
         data: data?.volume_data || [],
         backgroundColor: "#10b981",
       },

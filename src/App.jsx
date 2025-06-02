@@ -5,7 +5,7 @@ import "./index.css";
 import Analytics from "./components/Analytics";
 import WorkoutList from "./components/WorkoutList";
 
-const API_URL = "http://localhost:8000";
+const API_URL = "https://fitness-tracker-backend-1-e203.onrender.com";
 
 export default function App() {
   const [workouts, setWorkouts] = useState([]);

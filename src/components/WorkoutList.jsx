@@ -1,15 +1,13 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 
-const API_URL = "http://localhost:8000";
+const API_URL = "https://fitness-tracker-backend-1-e203.onrender.com";
 
 export default function WorkoutList({ workouts, onDelete }) {
   const handleDelete = async (id) => {
     if (window.confirm("Are you sure you want to delete this workout?")) {
       try {
-        const response = await axios.delete(
-          `http://localhost:8000/workouts/${id}`
-        );
+        const response = await axios.delete(`${API_URL}/workouts/${id}`);
 
         if (response.data.status === "success") {
           onDelete(id);

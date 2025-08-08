@@ -1,161 +1,137 @@
 import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
 import { addWorkout } from "../api/workoutService";
 
+// ✅ Schema validation (type-safe)
+const workoutSchema = z.object({
+  type: z.string().min(1, "Workout type is required"),
+  date: z.string().min(1, "Date is required"),
+  sets: z.number().min(1, "Must be at least 1 set"),
+  reps: z.number().min(1, "Must be at least 1 rep"),
+  weight: z.number().nullable().optional(),
+});
+
 function FitnessForm({ onWorkoutAdded = () => {} }) {
-  const [workout, setWorkout] = useState({
-    type: "strength",
-    date: new Date().toISOString().split("T")[0],
-    reps: 10,
-    sets: 3,
-    weight: "",
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm({
+    resolver: zodResolver(workoutSchema),
+    defaultValues: {
+      type: "strength",
+      date: new Date().toISOString().split("T")[0],
+      reps: 10,
+      sets: 3,
+      weight: "",
+    },
   });
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setWorkout((prev) => ({
-      ...prev,
-      [name]:
-        name === "reps" || name === "sets" || name === "weight"
-          ? value === ""
-            ? ""
-            : Number(value)
-          : value,
-    }));
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const onSubmit = async (data) => {
     try {
+      setIsSubmitting(true);
       const result = await addWorkout({
-        ...workout,
-        weight: workout.weight || null,
+        ...data,
+        weight: data.weight === "" ? null : Number(data.weight),
       });
       onWorkoutAdded(result);
-
-      setWorkout({
-        type: "strength",
-        date: new Date().toISOString().split("T")[0],
-        reps: 10,
-        sets: 3,
-        weight: "",
-      });
+      reset();
     } catch (error) {
       console.error("Submission failed:", error);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
   return (
     <form
-      onSubmit={handleSubmit}
-      className="bg-white rounded-xl shadow-sm p-6 space-y-6 max-w-2xl mx-auto"
+      onSubmit={handleSubmit(onSubmit)}
+      className="bg-white dark:bg-gray-900 rounded-xl shadow-sm p-6 space-y-6 max-w-2xl mx-auto transition-colors"
     >
-      <h2 className="text-2xl font-bold text-gray-800 mb-2">Log New Workout</h2>
+      <h2 className="text-2xl font-bold text-gray-800 dark:text-white">
+        Log New Workout
+      </h2>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div className="space-y-2">
-          <label
-            htmlFor="type"
-            className="block text-sm font-medium text-gray-700"
-          >
-            Workout Type
-          </label>
-          <select
-            id="type"
-            name="type"
-            value={workout.type}
-            onChange={handleChange}
-            className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
-          >
+        {/* Workout Type */}
+        <FormField label="Workout Type" error={errors.type?.message}>
+          <select {...register("type")} className="input-field">
             <option value="strength">Strength Training</option>
             <option value="cardio">Cardio</option>
             <option value="hiit">HIIT</option>
             <option value="yoga">Yoga</option>
             <option value="calisthenics">Calisthenics</option>
           </select>
-        </div>
+        </FormField>
 
-        <div className="space-y-2">
-          <label
-            htmlFor="date"
-            className="block text-sm font-medium text-gray-700"
-          >
-            Date
-          </label>
-          <input
-            type="date"
-            id="date"
-            name="date"
-            value={workout.date}
-            onChange={handleChange}
-            className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
-          />
-        </div>
+        {/* Date */}
+        <FormField label="Date" error={errors.date?.message}>
+          <input type="date" {...register("date")} className="input-field" />
+        </FormField>
 
-        <div className="space-y-2">
-          <label
-            htmlFor="sets"
-            className="block text-sm font-medium text-gray-700"
-          >
-            Sets
-          </label>
+        {/* Sets */}
+        <FormField label="Sets" error={errors.sets?.message}>
           <input
             type="number"
-            id="sets"
-            name="sets"
             min="1"
-            value={workout.sets}
-            onChange={handleChange}
-            className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+            {...register("sets", { valueAsNumber: true })}
+            className="input-field"
           />
-        </div>
+        </FormField>
 
-        <div className="space-y-2">
-          <label
-            htmlFor="reps"
-            className="block text-sm font-medium text-gray-700"
-          >
-            Reps
-          </label>
+        {/* Reps */}
+        <FormField label="Reps" error={errors.reps?.message}>
           <input
             type="number"
-            id="reps"
-            name="reps"
             min="1"
-            value={workout.reps}
-            onChange={handleChange}
-            className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+            {...register("reps", { valueAsNumber: true })}
+            className="input-field"
           />
-        </div>
+        </FormField>
 
-        <div className="space-y-2">
-          <label
-            htmlFor="weight"
-            className="block text-sm font-medium text-gray-700"
-          >
-            Weight (kg)
-            <span className="text-gray-400 ml-1 text-sm">optional</span>
-          </label>
+        {/* Weight */}
+        <FormField label="Weight (kg)" optional error={errors.weight?.message}>
           <input
             type="number"
-            id="weight"
-            name="weight"
             min="0"
             step="0.5"
-            value={workout.weight}
-            onChange={handleChange}
             placeholder="Enter weight"
-            className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+            {...register("weight", { valueAsNumber: true })}
+            className="input-field"
           />
-        </div>
+        </FormField>
       </div>
 
       <button
         type="submit"
-        className="w-full md:w-auto px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors shadow-sm hover:shadow-md"
+        disabled={isSubmitting}
+        className="w-full md:w-auto px-6 py-3 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 
+                   text-white font-medium rounded-lg transition-colors shadow-sm hover:shadow-md"
       >
-        Save Workout
+        {isSubmitting ? "Saving..." : "Save Workout"}
       </button>
     </form>
+  );
+}
+
+// ✅ Reusable form field wrapper
+function FormField({ label, error, children, optional = false }) {
+  return (
+    <div className="space-y-1">
+      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+        {label}
+        {optional && (
+          <span className="text-gray-400 ml-1 text-sm">(optional)</span>
+        )}
+      </label>
+      {children}
+      {error && <p className="text-sm text-red-600">{error}</p>}
+    </div>
   );
 }
 

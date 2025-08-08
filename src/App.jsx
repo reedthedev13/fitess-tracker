@@ -4,6 +4,7 @@ import FitnessForm from "./components/FitnessForm";
 import "./index.css";
 import Analytics from "./components/Analytics";
 import WorkoutList from "./components/WorkoutList";
+import DarkModeToggle from "./components/DarkModeToggle";
 
 const API_URL = "https://fitness-tracker-backend-1-e203.onrender.com";
 
@@ -13,6 +14,7 @@ export default function App() {
   const [refreshTrigger, setRefreshTrigger] = useState(0);
   const [workoutError, setWorkoutError] = useState(null);
   const [analyticsError, setAnalyticsError] = useState(null);
+
   const handleDeleteWorkout = (deletedId) => {
     setWorkouts((prev) => prev.filter((workout) => workout.id !== deletedId));
     setRefreshTrigger((prev) => prev + 1);
@@ -42,8 +44,14 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 p-4 md:p-8">
-      <h1 className="text-3xl font-bold mb-8 text-center">Fitness Tracker</h1>
+    <div className="min-h-screen bg-gray-100 dark:bg-gray-900 p-4 md:p-8 transition-colors">
+      {/* Header with Dark Mode Toggle */}
+      <header className="flex justify-between items-center mb-8">
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
+          Fitness Tracker
+        </h1>
+        <DarkModeToggle />
+      </header>
 
       {workoutError && <div className="text-red-500 mb-4">{workoutError}</div>}
       {analyticsError && (

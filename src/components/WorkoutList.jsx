@@ -1,5 +1,4 @@
 import axios from "axios";
-import { useEffect, useState } from "react";
 
 const API_URL = "https://fitness-tracker-backend-1-e203.onrender.com";
 
@@ -26,19 +25,25 @@ export default function WorkoutList({ workouts, onDelete }) {
 
   return (
     <div className="space-y-4">
-      <h2 className="text-2xl font-bold mb-4">Workout History</h2>
+      <h2 className="text-2xl font-bold mb-4 text-gray-900 dark:text-white">
+        Workout History
+      </h2>
+
       {workouts.length === 0 ? (
-        <p className="text-gray-500">No workouts recorded yet.</p>
+        <p className="text-gray-500 dark:text-gray-400">
+          No workouts recorded yet.
+        </p>
       ) : (
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
           {workouts.map((workout) => (
             <div
               key={workout.id}
-              className="bg-white p-4 rounded-lg shadow relative"
+              className="bg-white dark:bg-gray-900 p-4 rounded-lg shadow hover:shadow-md dark:shadow-gray-800 transition-shadow relative"
             >
+              {/* Delete button */}
               <button
                 onClick={() => handleDelete(workout.id)}
-                className="absolute top-2 right-2 text-red-500 hover:text-red-700"
+                className="absolute top-2 right-2 text-red-500 hover:text-red-700 dark:hover:text-red-400"
                 aria-label="Delete workout"
               >
                 <svg
@@ -54,16 +59,24 @@ export default function WorkoutList({ workouts, onDelete }) {
                   />
                 </svg>
               </button>
-              <h3 className="font-semibold text-lg capitalize">
+
+              {/* Workout info */}
+              <h3 className="font-semibold text-lg capitalize text-gray-900 dark:text-white">
                 {workout.type}
               </h3>
-              <p className="text-gray-600">
+              <p className="text-gray-600 dark:text-gray-300">
                 Date: {new Date(workout.date).toLocaleDateString()}
               </p>
-              <p className="text-gray-600">Sets: {workout.sets}</p>
-              <p className="text-gray-600">Reps: {workout.reps}</p>
+              <p className="text-gray-600 dark:text-gray-300">
+                Sets: {workout.sets}
+              </p>
+              <p className="text-gray-600 dark:text-gray-300">
+                Reps: {workout.reps}
+              </p>
               {workout.weight && (
-                <p className="text-gray-600">Weight: {workout.weight} kg</p>
+                <p className="text-gray-600 dark:text-gray-300">
+                  Weight: {workout.weight} kg
+                </p>
               )}
             </div>
           ))}

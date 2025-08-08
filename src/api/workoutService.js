@@ -1,4 +1,4 @@
-const API_BASE = "https://fitness-tracker-backend-1-e203.onrender.com";
+const API_BASE = "http://127.0.0.1:8000";
 
 export const getWorkout = async () => {
   const response = await fetch(`${API_BASE}/workouts/`);

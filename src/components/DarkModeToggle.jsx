@@ -1,40 +1,17 @@
-import { MoonIcon, SunIcon } from "@heroicons/react/24/solid";
-import { motion, AnimatePresence } from "framer-motion";
-import useDarkMode from "../hooks/useDarkMode";
+// src/components/DarkModeToggle.jsx
+import { useTheme } from "../context/ThemeContext";
 
 export default function DarkModeToggle() {
-  const [isDark, setIsDark] = useDarkMode();
+  const { theme, toggleTheme } = useTheme();
 
   return (
     <button
-      onClick={() => setIsDark(!isDark)}
-      className="p-2 rounded-lg border border-gray-300 dark:border-gray-600
-                 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
-      aria-label="Toggle dark mode"
+      onClick={toggleTheme}
+      className="p-2 rounded-lg border border-gray-300 dark:border-gray-700 
+                 bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200
+                 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
     >
-      <AnimatePresence mode="wait" initial={false}>
-        {isDark ? (
-          <motion.div
-            key="sun"
-            initial={{ rotate: -90, opacity: 0 }}
-            animate={{ rotate: 0, opacity: 1 }}
-            exit={{ rotate: 90, opacity: 0 }}
-            transition={{ duration: 0.3 }}
-          >
-            <SunIcon className="h-5 w-5 text-yellow-400" />
-          </motion.div>
-        ) : (
-          <motion.div
-            key="moon"
-            initial={{ rotate: 90, opacity: 0 }}
-            animate={{ rotate: 0, opacity: 1 }}
-            exit={{ rotate: -90, opacity: 0 }}
-            transition={{ duration: 0.3 }}
-          >
-            <MoonIcon className="h-5 w-5 text-gray-700" />
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {theme === "dark" ? "🌙 Dark" : "☀️ Light"}
     </button>
   );
 }

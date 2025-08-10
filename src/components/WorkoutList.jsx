@@ -2,14 +2,23 @@ export default function WorkoutList({ workouts = [], onDelete }) {
   const handleDelete = async (id) => {
     if (window.confirm("Are you sure you want to delete this workout?")) {
       try {
-        const response = await fetch(`http://127.0.0.1:8000/workouts/${id}`, {
-          method: "DELETE",
-        });
+        const response = await fetch(
+          `https://fitness-tracker-backend-1-e203.onrender.com/workouts/${id}`,
+          {
+            method: "DELETE",
+          }
+        );
 
         if (response.ok) {
           onDelete(id);
+        } else if (response.status === 404) {
+          alert("Workout not found. It might have already been deleted.");
+          onDelete(id); // optionally remove it from UI anyway
         } else {
-          alert("Failed to delete workout");
+          const errorData = await response.json().catch(() => ({}));
+          alert(
+            "Failed to delete workout: " + (errorData.detail || "Unknown error")
+          );
         }
       } catch (error) {
         alert("Error deleting workout: " + error.message);

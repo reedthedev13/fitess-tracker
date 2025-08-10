@@ -95,7 +95,7 @@ function FitnessForm({ onWorkoutAdded = () => {} }) {
         </FormField>
 
         {/* Weight */}
-        <FormField label="Weight (kg)" optional error={errors.weight?.message}>
+        <FormField label="Weight (lb)" optional error={errors.weight?.message}>
           <input
             type="number"
             min="0"

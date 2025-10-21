@@ -51,7 +51,7 @@ function FitnessForm({ onWorkoutAdded = () => {} }) {
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className="bg-white dark:bg-gray-900 rounded-xl shadow-sm p-6 space-y-6 max-w-2xl mx-auto transition-colors"
+      className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 space-y-6 max-w-2xl mx-auto transition-colors"
     >
       <h2 className="text-2xl font-bold text-gray-800 dark:text-white">
         Log New Workout
@@ -119,7 +119,7 @@ function FitnessForm({ onWorkoutAdded = () => {} }) {
   );
 }
 
-// ✅ Reusable form field wrapper
+// Reusable form field wrapper
 function FormField({ label, error, children, optional = false }) {
   return (
     <div className="space-y-1">

@@ -4,17 +4,17 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { addWorkout } from "../api/workoutService";
 
-// ✅ Schema validation (type-safe)
 const workoutSchema = z.object({
   type: z.string().min(1, "Workout type is required"),
   date: z.string().min(1, "Date is required"),
   sets: z.number().min(1, "Must be at least 1 set"),
   reps: z.number().min(1, "Must be at least 1 rep"),
-  weight: z.number().nullable().optional(),
+  weight: z.number().min(0, "Weight is required"),
 });
 
 function FitnessForm({ onWorkoutAdded = () => {} }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState("");
 
   const {
     register,
@@ -28,21 +28,26 @@ function FitnessForm({ onWorkoutAdded = () => {} }) {
       date: new Date().toISOString().split("T")[0],
       reps: 10,
       sets: 3,
-      weight: "",
+      weight: 0,
     },
   });
 
   const onSubmit = async (data) => {
+    setSubmitError(""); // reset previous errors
     try {
       setIsSubmitting(true);
       const result = await addWorkout({
         ...data,
-        weight: data.weight === "" ? null : Number(data.weight),
+        weight: Number(data.weight),
       });
       onWorkoutAdded(result);
       reset();
     } catch (error) {
       console.error("Submission failed:", error);
+      // Show error inline
+      setSubmitError(
+        error?.message || "Failed to add workout. Please try again."
+      );
     } finally {
       setIsSubmitting(false);
     }
@@ -58,7 +63,6 @@ function FitnessForm({ onWorkoutAdded = () => {} }) {
       </h2>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {/* Workout Type */}
         <FormField label="Workout Type" error={errors.type?.message}>
           <select {...register("type")} className="input-field">
             <option value="strength">Strength Training</option>
@@ -69,12 +73,10 @@ function FitnessForm({ onWorkoutAdded = () => {} }) {
           </select>
         </FormField>
 
-        {/* Date */}
         <FormField label="Date" error={errors.date?.message}>
           <input type="date" {...register("date")} className="input-field" />
         </FormField>
 
-        {/* Sets */}
         <FormField label="Sets" error={errors.sets?.message}>
           <input
             type="number"
@@ -84,7 +86,6 @@ function FitnessForm({ onWorkoutAdded = () => {} }) {
           />
         </FormField>
 
-        {/* Reps */}
         <FormField label="Reps" error={errors.reps?.message}>
           <input
             type="number"
@@ -94,8 +95,7 @@ function FitnessForm({ onWorkoutAdded = () => {} }) {
           />
         </FormField>
 
-        {/* Weight */}
-        <FormField label="Weight (lb)" optional error={errors.weight?.message}>
+        <FormField label="Weight (lb)" error={errors.weight?.message}>
           <input
             type="number"
             min="0"
@@ -106,6 +106,11 @@ function FitnessForm({ onWorkoutAdded = () => {} }) {
           />
         </FormField>
       </div>
+
+      {/* Backend / submission error */}
+      {submitError && (
+        <p className="text-red-500 text-sm font-medium">{submitError}</p>
+      )}
 
       <button
         type="submit"
@@ -119,15 +124,11 @@ function FitnessForm({ onWorkoutAdded = () => {} }) {
   );
 }
 
-// Reusable form field wrapper
-function FormField({ label, error, children, optional = false }) {
+function FormField({ label, error, children }) {
   return (
     <div className="space-y-1">
       <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
         {label}
-        {optional && (
-          <span className="text-gray-400 ml-1 text-sm">(optional)</span>
-        )}
       </label>
       {children}
       {error && <p className="text-sm text-red-600">{error}</p>}

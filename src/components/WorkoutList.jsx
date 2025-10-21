@@ -48,7 +48,7 @@ export default function WorkoutList({ workouts = [], onDelete }) {
                          bg-gray-50 dark:bg-gray-900 
                          text-gray-800 dark:text-gray-200
                          flex justify-between items-start
-                         transition-colors"
+                         transition-colors relative"
             >
               <div>
                 <span className="font-medium capitalize">{workout.type}</span> —{" "}
@@ -60,6 +60,7 @@ export default function WorkoutList({ workouts = [], onDelete }) {
                   Date: {new Date(workout.date).toLocaleDateString()}
                 </div>
               </div>
+
               <button
                 onClick={() => setConfirmDeleteId(workout.id)}
                 className="ml-4 text-red-600 hover:text-red-800 font-semibold"
@@ -68,7 +69,7 @@ export default function WorkoutList({ workouts = [], onDelete }) {
                 Delete
               </button>
 
-              {/* Delete Confirmation Modal */}
+              {/* Inline Delete Confirmation Modal */}
               {confirmDeleteId === workout.id && (
                 <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
                   <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg w-80">
@@ -79,6 +80,7 @@ export default function WorkoutList({ workouts = [], onDelete }) {
                       This will permanently delete your workout.
                     </p>
 
+                    {/* Show error inline */}
                     {error && (
                       <p className="text-red-500 text-sm mb-2">{error}</p>
                     )}

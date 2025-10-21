@@ -7,6 +7,7 @@ Chart.register(...registerables);
 export default function Analytics({ data }) {
   const [isDark, setIsDark] = useState(false);
 
+  // Detect dark mode dynamically
   useEffect(() => {
     setIsDark(document.documentElement.classList.contains("dark"));
 
@@ -22,33 +23,24 @@ export default function Analytics({ data }) {
     return () => observer.disconnect();
   }, []);
 
-  // Defensive fallback for volume_data
-  let volumeDataRaw = data?.volume_data || [];
-
-  // Replace null/undefined with 0 and ensure numbers
-  const volumeDataClean = volumeDataRaw.map((v) =>
+  // Defensive cleanup: ensure all reps and volume are numbers
+  const repsDataClean = (data?.reps_data || []).map((v) =>
+    typeof v === "number" && !isNaN(v) ? v : 0
+  );
+  const volumeDataClean = (data?.volume_data || []).map((v) =>
     typeof v === "number" && !isNaN(v) ? v : 0
   );
 
-  // Determine if we need to scale volume down by 1000
-  const maxVolume = Math.max(...volumeDataClean, 0);
-  let volumeData = volumeDataClean;
-  let volumeLabel = "Volume (Lb)";
-
-  if (maxVolume > 10000) {
-    volumeData = volumeDataClean.map((v) => +(v / 1000).toFixed(2));
-    volumeLabel = "Volume (Lb × 1000)";
-  } else {
-    // Round for display consistency
-    volumeData = volumeDataClean.map((v) => +v.toFixed(2));
-  }
+  // Round volume for display
+  const volumeData = volumeDataClean.map((v) => +v.toFixed(2));
+  const volumeLabel = "Volume (lb)";
 
   const chartData = {
     labels: data?.labels || [],
     datasets: [
       {
         label: "Total Reps",
-        data: data?.reps_data || [],
+        data: repsDataClean,
         backgroundColor: "#3b82f6",
       },
       {

@@ -18,5 +18,65 @@
     .dark .date-input::-webkit-calendar-picker-indicator {
       filter: brightness(1.5);
     }
+    /* --- Base Calendar Styles --- */
+    .react-calendar {
+      border: none !important;
+      background: transparent !important;
+      width: 100%;
+      font-family: "Inter", sans-serif;
+    }
+
+    .react-calendar__tile {
+      border-radius: 8px;
+      padding: 0.75rem 0;
+      transition: all 0.2s ease;
+    }
+
+    /* --- Light Mode --- */
+    .calendar-light .react-calendar__tile--now {
+      background-color: rgba(59, 130, 246, 0.15) !important;
+      color: #3b82f6 !important;
+      font-weight: 600;
+    }
+    .calendar-light .react-calendar__tile--active {
+      background-color: #3b82f6 !important;
+      color: white !important;
+    }
+    .calendar-light .react-calendar__month-view__days__day.has-workout {
+      background-color: rgba(34, 197, 94, 0.15);
+      color: #22c55e;
+      font-weight: 600;
+    }
+
+    /* --- Dark Mode --- */
+    .calendar-dark {
+      background-color: transparent !important;
+    }
+    .calendar-dark .react-calendar__navigation button {
+      color: #e5e7eb !important;
+    }
+    .calendar-dark .react-calendar__tile {
+      color: #d1d5db !important;
+    }
+    .calendar-dark .react-calendar__tile--now {
+      background-color: rgba(59, 130, 246, 0.25) !important;
+      color: #60a5fa !important;
+    }
+    .calendar-dark .react-calendar__tile--active {
+      background-color: #3b82f6 !important;
+      color: white !important;
+    }
+    .calendar-dark .react-calendar__month-view__days__day.has-workout {
+      background-color: rgba(34, 197, 94, 0.25);
+      color: #4ade80;
+      font-weight: 600;
+    }
+
+    .calendar-dark .react-calendar__tile:hover {
+      background: transparent !important;
+      color: inherit !important;
+      border: none !important;
+      transform: none !important;
+    }
   }
 }

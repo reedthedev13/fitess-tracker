@@ -1,4 +1,3 @@
-// src/components/DarkModeToggle.jsx
 import { useTheme } from "../context/ThemeContext";
 
 export default function DarkModeToggle() {

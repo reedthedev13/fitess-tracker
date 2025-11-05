@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { motion } from "framer-motion";
 
 export default function WorkoutList({ workouts = [], onDelete }) {
   const [confirmDeleteId, setConfirmDeleteId] = useState(null);
@@ -30,7 +31,12 @@ export default function WorkoutList({ workouts = [], onDelete }) {
   };
 
   return (
-    <div className="p-6 bg-white dark:bg-gray-800 rounded-2xl shadow-md transition-colors">
+    <motion.div
+      initial={{ opacity: 0, y: 15 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4 }}
+      className="p-6 bg-white dark:bg-gray-800 rounded-2xl shadow-md transition-colors"
+    >
       <h2 className="text-2xl font-semibold mb-4 text-gray-900 dark:text-gray-100">
         Workout List
       </h2>
@@ -80,7 +86,6 @@ export default function WorkoutList({ workouts = [], onDelete }) {
                       This will permanently delete your workout.
                     </p>
 
-                    {/* Show error inline */}
                     {error && (
                       <p className="text-red-500 text-sm mb-2">{error}</p>
                     )}
@@ -107,6 +112,6 @@ export default function WorkoutList({ workouts = [], onDelete }) {
           ))}
         </ul>
       )}
-    </div>
+    </motion.div>
   );
 }

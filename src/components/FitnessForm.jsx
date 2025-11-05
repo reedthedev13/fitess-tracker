@@ -3,6 +3,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { addWorkout } from "../api/workoutService";
+import { motion } from "framer-motion";
 
 const workoutSchema = z.object({
   type: z.string().min(1, "Workout type is required"),
@@ -44,7 +45,6 @@ function FitnessForm({ onWorkoutAdded = () => {} }) {
       reset();
     } catch (error) {
       console.error("Submission failed:", error);
-      // Show error inline
       setSubmitError(
         error?.message || "Failed to add workout. Please try again."
       );
@@ -54,8 +54,11 @@ function FitnessForm({ onWorkoutAdded = () => {} }) {
   };
 
   return (
-    <form
+    <motion.form
       onSubmit={handleSubmit(onSubmit)}
+      initial={{ opacity: 0, y: 15 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4 }}
       className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 space-y-6 max-w-2xl mx-auto transition-colors"
     >
       <h2 className="text-2xl font-bold text-gray-800 dark:text-white">
@@ -107,7 +110,6 @@ function FitnessForm({ onWorkoutAdded = () => {} }) {
         </FormField>
       </div>
 
-      {/* Backend / submission error */}
       {submitError && (
         <p className="text-red-500 text-sm font-medium">{submitError}</p>
       )}
@@ -120,7 +122,7 @@ function FitnessForm({ onWorkoutAdded = () => {} }) {
       >
         {isSubmitting ? "Saving..." : "Save Workout"}
       </button>
-    </form>
+    </motion.form>
   );
 }
 

@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Bar } from "react-chartjs-2";
 import { Chart, registerables } from "chart.js";
+import { motion } from "framer-motion";
 
 Chart.register(...registerables);
 
@@ -31,7 +32,6 @@ export default function Analytics({ data }) {
     typeof v === "number" && !isNaN(v) ? v : 0
   );
 
-  // Round volume for display
   const volumeData = volumeDataClean.map((v) => +v.toFixed(2));
   const volumeLabel = "Volume (lb)";
 
@@ -95,13 +95,18 @@ export default function Analytics({ data }) {
   };
 
   return (
-    <div className="p-6 bg-white dark:bg-gray-800 rounded-2xl shadow-md border border-gray-200 dark:border-gray-700 transition-colors">
+    <motion.div
+      initial={{ opacity: 0, y: 15 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4 }}
+      className="p-6 bg-white dark:bg-gray-800 rounded-2xl shadow-md border border-gray-200 dark:border-gray-700 transition-colors"
+    >
       <h2 className="text-2xl font-semibold mb-4 text-gray-900 dark:text-gray-100">
         Weekly Performance
       </h2>
       <div className="h-64">
         <Bar data={chartData} options={chartOptions} />
       </div>
-    </div>
+    </motion.div>
   );
 }
